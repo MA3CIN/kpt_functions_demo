@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Service
+metadata: # kpt-merge: example/the-service
+  name: the-service
+  namespace: example-ns
+  annotations:
+    internal.kpt.dev/upstream-identifier: '|Service|example|the-service'
+---
+apiVersion: v1
+kind: Namespace
+metadata: # kpt-merge: /example
+  name: example-ns
+  annotations:
+    internal.kpt.dev/upstream-identifier: '|Namespace|default|example'
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata: # kpt-merge: /the-crd
+  name: the-crd
+  annotations:
+    internal.kpt.dev/upstream-identifier: 'apiextensions.k8s.io|CustomResourceDefinition|default|the-crd'
+spec:
+  conversion:
+    strategy: Webhook
+    webhook:
+      clientConfig:
+        service:
+          name: crd-svc
+          namespace: example-ns
+---
+apiVersion: apiregistration.k8s.io/v1
+kind: APIService
+metadata: # kpt-merge: /the-api-service
+  name: the-api-service
+  annotations:
+    internal.kpt.dev/upstream-identifier: 'apiregistration.k8s.io|APIService|default|the-api-service'
+spec:
+  service:
+    name: api-svc
+    namespace: example-ns
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata: # kpt-merge: /crb1
+  name: crb1
+  annotations:
+    internal.kpt.dev/upstream-identifier: 'rbac.authorization.k8s.io|ClusterRoleBinding|default|crb1'
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: example-ns
