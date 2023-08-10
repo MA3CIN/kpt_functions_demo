@@ -7,7 +7,7 @@ functions.
 The capacity requirements are captured in a custom resource (capacity.yaml) within the deployed
 package.
 
-Start by saving the package Variant downstream target name to a variable
+Start by saving the package Variant downstream target name to a variable.
 
 ```
 kubectl config use kind-kind
@@ -65,7 +65,7 @@ kpt alpha rpkg propose -n default "$upf_package_revision"
 kpt alpha rpkg approve -n default "$upf_package_revision"
 ```
 
-We can check the current lifecycle stage of a package using the kpt get command
+We can check the current lifecycle stage of a package using the kpt get command.
 
 
 <details>
@@ -79,8 +79,9 @@ edge01-40c616e5d87053350473d3ffa1387a9a534f8f42                    free5gc-upf  
 ```
 </details>
 
-After the package is approved, check the state of the UPF pod on the edge cluster
+After the package is approved, check the status of the UPF pod on the edge cluster.
 
 ```
 kubectl config use edge01-admin@edge01
+kubectl get po -n 
 ```
