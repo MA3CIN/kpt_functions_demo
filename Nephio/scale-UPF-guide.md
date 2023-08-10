@@ -14,7 +14,7 @@ kubectl config use kind-kind
 upf_packagevariant=$(kubectl get packagevariant edge-free5gc-upf-edge01-free5gc-upf -o jsonpath='{.status.downstreamTargets[0].name}')
 
 ```
-Next create a new package revision from the existing upf package.
+Next create a new package revision from the existing UPF package.
 
 ```
 ws="upf-scale-package"
@@ -25,7 +25,6 @@ Pull the package to a local directory of your choice. The contents of the packag
 ```
 package_location=/tmp/$ws
 kpt alpha rpkg pull -n default "$upf_package_revision" $package_location
-
 ```
 
 Apply the kpt functions to the contents of the kpt package with a new value for the throughputs of your choice.
@@ -35,13 +34,11 @@ new_capacity_value=10
 kpt fn eval --image gcr.io/kpt-fn/search-replace:v0.2.0 $package_location -- by-path='spec.maxUplinkThroughput' by-file-path='**/capacity.yaml' put-value=$new_capacity_value
 
 kpt fn eval --image gcr.io/kpt-fn/search-replace:v0.2.0 $package_location -- by-path='spec.maxDownlinkThroughput' by-file-path='**/capacity.yaml' put-value=$new_capacity_value
-
 ```
 
-Observe the changes to the upf configuration using the kpt pkg diff command.
+Observe the changes to the UPF configuration using the kpt pkg diff command.
 ```
 kpt pkg diff $package_location | grep linkThroughput
-
 ``` 
 
 <details>
@@ -82,4 +79,8 @@ edge01-40c616e5d87053350473d3ffa1387a9a534f8f42                    free5gc-upf  
 ```
 </details>
 
+After the package is approved, check the state of the UPF pod on the edge cluster
 
+```
+kubectl config use edge01-admin@edge01
+```
